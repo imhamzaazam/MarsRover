@@ -35,25 +35,55 @@ public class Rover {
     private void followSingleCommand(char command) {
         switch (command){
             case 'F':
-                if(direction.equals(Direction.NORTH))
-                    updateYCoordinate(moveForward());
-                    break;
+                if(direction.equals(Direction.NORTH)) {
+                    updateYCoordinate(moveForwardOnYAxis());
+                }
+                if(direction.equals(Direction.SOUTH)){
+                    updateYCoordinate(moveBackwardOnYAxis());
+                }if(direction.equals(Direction.EAST)){
+                    updateXCoordinate(moveForwardOnXAxis());
+                }if(direction.equals(Direction.WEST)){
+                updateXCoordinate(moveBackwardsOnXAxis());
+            }
+                break;
             case 'B':
-                if(direction.equals(Direction.NORTH))
-                    updateYCoordinate(moveBackward());
-                    break;
+                if(direction.equals(Direction.NORTH)) {
+                    updateYCoordinate(moveBackwardOnYAxis());
+                }
+                if(direction.equals(Direction.SOUTH)){
+                    updateYCoordinate(moveForwardOnYAxis());
+                }
+                if(direction.equals(Direction.EAST)){
+                updateXCoordinate(moveBackwardsOnXAxis());
+                }
+                if(direction.equals(Direction.WEST)) {
+                    updateXCoordinate(moveForwardOnXAxis());
+                }
+                break;
         }
     }
 
     private void updateYCoordinate(int yCoordinate){
         this.coordinate.setyCoordinate(yCoordinate);
     }
-
-    private int moveBackward() {
-        return (this.getCoordinate().getyCoordinate() - 1);
+    private void updateXCoordinate(int xCoordinate){
+        this.coordinate.setxCoordinate(xCoordinate);
     }
 
-    private int moveForward() {
+    private int moveForwardOnYAxis() {
         return (this.getCoordinate().getyCoordinate() + 1);
     }
+    private int moveForwardOnXAxis() {
+        return (this.getCoordinate().getxCoordinate() + 1);
+    }
+    private int moveBackwardOnYAxis() {
+        return (this.getCoordinate().getyCoordinate() - 1);
+    }
+    private int moveBackwardsOnXAxis() {
+        return (this.getCoordinate().getxCoordinate() - 1);
+    }
+
+
+
+
 }

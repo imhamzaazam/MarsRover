@@ -27,7 +27,7 @@ public class RoverShould {
         assertThat(rover.getDirection()).isEqualTo(Direction.NORTH);
     }
     @Test
-    public void recievesArrayOfCommands(){
+    public void receivesArrayOfCommands(){
         rover.followCommands(commands);
         assertThat(commands).isNotEmpty();
     }
@@ -47,11 +47,54 @@ public class RoverShould {
         assertThat(rover.getCoordinate().getyCoordinate()).isEqualTo(expected);
     }
     @Test
-    public void moveFowardInSouthDirection(){
+    public void moveForwardInSouthDirection(){
         char[] forwardCommand = new char[]{'F'};
+        rover.setDirection(Direction.SOUTH);
         int expected = rover.getCoordinate().getyCoordinate()-1;
         rover.followCommands(forwardCommand);
         assertThat(rover.getCoordinate().getyCoordinate()).isEqualTo(expected);
 
     }
+    @Test
+    public void moveBackwardInSouthDirection(){
+        char[] forwardCommand = new char[]{'B'};
+        rover.setDirection(Direction.SOUTH);
+        int expected = rover.getCoordinate().getyCoordinate()+1;
+        rover.followCommands(forwardCommand);
+        assertThat(rover.getCoordinate().getyCoordinate()).isEqualTo(expected);
+
+    }
+    @Test
+    public void moveForwardInEastDirection(){
+        char[] forwardCommand = new char[]{'F'};
+        rover.setDirection(Direction.EAST);
+        int expected = rover.getCoordinate().getxCoordinate()+1;
+        rover.followCommands(forwardCommand);
+        assertThat(rover.getCoordinate().getxCoordinate()).isEqualTo(expected);
+    }
+    @Test
+    public void moveBackwardsInEastDirection(){
+        char[] forwardCommand = new char[]{'B'};
+        rover.setDirection(Direction.EAST);
+        int expected = rover.getCoordinate().getxCoordinate()-1;
+        rover.followCommands(forwardCommand);
+        assertThat(rover.getCoordinate().getxCoordinate()).isEqualTo(expected);
+    }
+    @Test
+    public void moveForwardInWestDirection(){
+        char[] forwardCommand = new char[]{'F'};
+        rover.setDirection(Direction.WEST);
+        int expected = rover.getCoordinate().getxCoordinate()-1;
+        rover.followCommands(forwardCommand);
+        assertThat(rover.getCoordinate().getxCoordinate()).isEqualTo(expected);
+    }
+    @Test
+    public void moveBackwardsInWestDirection(){
+        char[] forwardCommand = new char[]{'B'};
+        rover.setDirection(Direction.WEST);
+        int expected = rover.getCoordinate().getxCoordinate()+1;
+        rover.followCommands(forwardCommand);
+        assertThat(rover.getCoordinate().getxCoordinate()).isEqualTo(expected);
+    }
+
 }
