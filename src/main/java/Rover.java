@@ -1,13 +1,13 @@
 public class Rover {
     private Coordinate coordinate;
-    private Direction direction;
+    private Sphere sphere;
 
     public Rover() {
     }
 
-    public Rover(Coordinate coordinate, Direction direction) {
+    public Rover(Coordinate coordinate, Sphere sphere) {
         this.coordinate = coordinate;
-        this.direction = direction;
+        this.sphere = sphere;
     }
 
     public Coordinate getCoordinate() {
@@ -18,72 +18,157 @@ public class Rover {
         this.coordinate = coordinate;
     }
 
-    public Direction getDirection() {
-        return direction;
-    }
-
-    public void setDirection(Direction direction) {
-        this.direction = direction;
-    }
 
     public void followCommands(char[] commands) {
-        for(char command: commands){
+        for (char command : commands) {
             followSingleCommand(command);
         }
     }
 
     private void followSingleCommand(char command) {
-        switch (command){
+        switch (command) {
             case 'F':
-                if(direction.equals(Direction.NORTH)) {
-                    updateYCoordinate(moveForwardOnYAxis());
-                }
-                if(direction.equals(Direction.SOUTH)){
-                    updateYCoordinate(moveBackwardOnYAxis());
-                }if(direction.equals(Direction.EAST)){
-                    updateXCoordinate(moveForwardOnXAxis());
-                }if(direction.equals(Direction.WEST)){
-                updateXCoordinate(moveBackwardsOnXAxis());
-            }
+                moveForward();
                 break;
             case 'B':
-                if(direction.equals(Direction.NORTH)) {
-                    updateYCoordinate(moveBackwardOnYAxis());
-                }
-                if(direction.equals(Direction.SOUTH)){
-                    updateYCoordinate(moveForwardOnYAxis());
-                }
-                if(direction.equals(Direction.EAST)){
-                updateXCoordinate(moveBackwardsOnXAxis());
-                }
-                if(direction.equals(Direction.WEST)) {
-                    updateXCoordinate(moveForwardOnXAxis());
-                }
+                moveBackwards();
                 break;
+            case 'L':
+                moveLeft();
+                break;
+            case 'R':
+                moveRight();
+                break;
+            default:
+                throw new IllegalArgumentException("Command not valid");
         }
     }
 
-    private void updateYCoordinate(int yCoordinate){
-        this.coordinate.setyCoordinate(yCoordinate);
+    private void moveRight() {
+        if (coordinate.getDirection().equals(Direction.NORTH)) {
+            this.coordinate.setDirection(Direction.EAST);
+            updateXCoordinate(moveForwardOnXAxis());
+            return;
+        }
+        if(coordinate.getDirection().equals(Direction.WEST)){
+            this.coordinate.setDirection(Direction.NORTH);
+            updateXCoordinate(moveForwardOnXAxis());
+            return;
+        }
+        if(coordinate.getDirection().equals(Direction.SOUTH)){
+            this.coordinate.setDirection(Direction.WEST);
+            updateXCoordinate(moveBackwardsOnXAxis());
+            return;
+        }
+        if(coordinate.getDirection().equals(Direction.EAST)){
+            this.coordinate.setDirection(Direction.SOUTH);
+            updateYCoordinate(moveBackwardOnYAxis());
+            return;
+        }
     }
-    private void updateXCoordinate(int xCoordinate){
-        this.coordinate.setxCoordinate(xCoordinate);
+
+    private void moveLeft() {
+        if (coordinate.getDirection().equals(Direction.NORTH)) {
+            this.coordinate.setDirection(Direction.WEST);
+            updateXCoordinate(moveBackwardsOnXAxis());
+            return;
+        }
+        if(coordinate.getDirection().equals(Direction.WEST)){
+            this.coordinate.setDirection(Direction.SOUTH);
+            updateYCoordinate(moveBackwardOnYAxis());
+            return;
+        }
+        if(coordinate.getDirection().equals(Direction.SOUTH)){
+            this.coordinate.setDirection(Direction.EAST);
+            updateXCoordinate(moveForwardOnXAxis());
+            return;
+        }
+        if(coordinate.getDirection().equals(Direction.EAST)){
+            this.coordinate.setDirection(Direction.NORTH);
+            updateYCoordinate(moveForwardOnYAxis());
+            return;
+        }
+    }
+
+    private void moveBackwards() {
+        if (coordinate.getDirection().equals(Direction.NORTH)) {
+            updateYCoordinate(moveBackwardOnYAxis());
+        }
+        if (coordinate.getDirection().equals(Direction.SOUTH)) {
+            updateYCoordinate(moveForwardOnYAxis());
+        }
+        if (coordinate.getDirection().equals(Direction.EAST)) {
+            updateXCoordinate(moveBackwardsOnXAxis());
+        }
+        if (coordinate.getDirection().equals(Direction.WEST)) {
+            updateXCoordinate(moveForwardOnXAxis());
+        }
+    }
+
+    private void moveForward() {
+        if (coordinate.getDirection().equals(Direction.NORTH)) {
+            updateYCoordinate(moveForwardOnYAxis());
+        }
+        if (coordinate.getDirection().equals(Direction.SOUTH)) {
+            updateYCoordinate(moveBackwardOnYAxis());
+        }
+        if (coordinate.getDirection().equals(Direction.EAST)) {
+            updateXCoordinate(moveForwardOnXAxis());
+        }
+        if (coordinate.getDirection().equals(Direction.WEST)) {
+            updateXCoordinate(moveBackwardsOnXAxis());
+        }
+        return;
+    }
+
+    private void updateYCoordinate(int yCoordinate) {
+        if (!(sphere.YCoordinateWithinSphere(coordinate))) {
+            if (yCoordinate < 0) {
+                this.coordinate.setyCoordinate(sphere.getMaxHeight());
+            }
+            if (yCoordinate > sphere.getMaxWidth()) {
+                this.coordinate.setyCoordinate(yCoordinate % sphere.getMaxHeight());
+            }
+        }else{
+            this.coordinate.setyCoordinate(yCoordinate);
+        }
+    }
+
+    private void updateXCoordinate(int xCoordinate) {
+        if (!(sphere.XCoordinateWithinSphere(coordinate))) {
+            if (xCoordinate < 0) {
+                this.coordinate.setxCoordinate(sphere.getMaxWidth());
+            }
+            if (xCoordinate > sphere.getMaxWidth()) {
+                this.coordinate.setxCoordinate(xCoordinate % sphere.getMaxWidth());
+            }
+        } else {
+            this.coordinate.setxCoordinate(xCoordinate);
+        }
     }
 
     private int moveForwardOnYAxis() {
-        return (this.getCoordinate().getyCoordinate() + 1);
+        int yCoordinate=  (this.getCoordinate().getyCoordinate() + 1);
+        this.coordinate.setyCoordinate(yCoordinate);
+        return yCoordinate;
     }
+
     private int moveForwardOnXAxis() {
-        return (this.getCoordinate().getxCoordinate() + 1);
+        int xCoordinate= (this.getCoordinate().getxCoordinate() + 1);
+        this.coordinate.setxCoordinate(xCoordinate);
+        return xCoordinate;
     }
+
     private int moveBackwardOnYAxis() {
-        return (this.getCoordinate().getyCoordinate() - 1);
+        int yCoordinate =  (this.getCoordinate().getyCoordinate() - 1);
+        this.coordinate.setyCoordinate(yCoordinate);
+        return yCoordinate;
     }
+
     private int moveBackwardsOnXAxis() {
-        return (this.getCoordinate().getxCoordinate() - 1);
+        int xCoordinate=  (this.getCoordinate().getxCoordinate() - 1);
+        this.coordinate.setxCoordinate(xCoordinate);
+        return xCoordinate;
     }
-
-
-
 
 }

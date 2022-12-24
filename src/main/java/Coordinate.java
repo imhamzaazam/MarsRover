@@ -1,11 +1,18 @@
+import java.util.List;
+
 public class Coordinate {
     private int xCoordinate;
     private int yCoordinate;
+    private Direction direction;
 
-    public Coordinate(int xCoordinate, int yCoordinate) {
+    private List<Obstacle> obstacle;
+
+    public Coordinate(int xCoordinate, int yCoordinate, Direction direction) {
         this.xCoordinate = xCoordinate;
         this.yCoordinate = yCoordinate;
+        this.direction = direction;
     }
+
 
     public int getxCoordinate() {
         return xCoordinate;
@@ -22,4 +29,15 @@ public class Coordinate {
     public void setyCoordinate(int yCoordinate) {
         this.yCoordinate = yCoordinate;
     }
+
+    public Direction getDirection() {
+        return direction;
+    }
+
+    public void setDirection(Direction direction) {
+        this.direction = direction;
+    }
+
+
+
 }
